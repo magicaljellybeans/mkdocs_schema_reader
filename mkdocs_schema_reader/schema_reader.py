@@ -28,6 +28,8 @@ class SchemaReader(BasePlugin):
                         if any(x in data for x in schema_syntax):
                             # write converted markdown file to this location
                             path = f"site/schema/{file[:-5]}.md"
+                            if not os.path.isdir("./site/schema"):
+                                os.mkdir("./site/schema")
 
                             with open(path, "w") as md:
                                 lines = parser.parse_schema(json.loads(data))
