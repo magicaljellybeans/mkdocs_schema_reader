@@ -1,6 +1,7 @@
 import os
 import jsonschema2md
 import json
+import logging
 
 from mkdocs.structure.files import File
 from mkdocs.plugins import BasePlugin
@@ -18,9 +19,10 @@ class SchemaReader(BasePlugin):
             dirs[:] = [d for d in dirs if d not in excludedirs]
 
             for file in filenames:
+                jsonpath = os.path.join(root, file)
                 if file.endswith(".json"):
 
-                    with open(os.path.join(root, file)) as f:
+                    with open(jsonpath) as f:
                         # Check file is a schema file
                         data = f.read()
                         schema_syntax = ["$schema", "$ref"]
@@ -31,10 +33,15 @@ class SchemaReader(BasePlugin):
                             if not os.path.isdir("./site/schema"):
                                 os.mkdirs("./site/schema", exist_ok=True)
 
-                            with open(path, "w") as md:
-                                lines = parser.parse_schema(json.loads(data))
-                                for line in lines:
-                                    md.write(line)
+                            try:
+                                with open(path, "w") as md:
+                                    lines = parser.parse_schema(json.loads(data))
+                                    for line in lines:
+                                        md.write(line)
+                            except Exception:
+                                logging.exception(f"Error handling {jsonpath}")
+                                print("The file may not be valid Schema, consider excluding it.")
+                                continue
 
                             # Add to Files object
                             mkdfile = File(
