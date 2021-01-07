@@ -15,7 +15,7 @@ setup(
     author="Tom Robinson",
     author_email="tome.robin@gmail.com",
     license="MIT",
-    python_requires=">=2.7",
+    python_requires=">=3.6",
     install_requires=["mkdocs>=1.0.4", "jsonschema2md"],
     packages=find_packages(),
     entry_points={

@@ -10,31 +10,30 @@ from mkdocs.config import config_options
 
 class SchemaReader(BasePlugin):
 
-    config_scheme = ("include", config_options.Type(list, default=[]))
+    config_scheme = (("include", config_options.Type(list, default=[])),)
 
-    def on_pre_build(self, config, **kwargs):
-        self.include = []
-
+    def on_files(self, files, config):
         # Add json files within included files/directories to list
+        locations = []
+
         for entry in self.config["include"]:
             if entry.endswith(".json"):
-                self.include.append(entry)
+                locations.append(entry)
 
             elif os.path.isdir(entry):
                 for root, dirs, filenames in os.walk(entry):
                     for file in filenames:
                         if file.endswith(".json"):
-                            self.include.append(entry)
+                            locations.append(os.path.join(root, file))
 
             else:
                 logging.warning(f"Could not locate {entry}")
 
-    def on_files(self, files, config):
         parser = jsonschema2md.Parser()
         schema_list = []
         schema_dict = {"Schema": schema_list}
 
-        for filepath in self.config["include"]:
+        for filepath in locations:
             file = os.path.basename(filepath)
 
             with open(filepath) as f:
@@ -46,7 +45,7 @@ class SchemaReader(BasePlugin):
                     # write converted markdown file to this location
                     path = f"site/schema/{file[:-5]}.md"
                     if not os.path.isdir("./site/schema"):
-                        os.mkdirs("./site/schema", exist_ok=True)
+                        os.makedirs("./site/schema", exist_ok=True)
 
                     try:
                         with open(path, "w") as md:
