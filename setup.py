@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="mkdocs_schema_reader",
-    version="0.11.0",
+    version="0.11.1",
     description="A MkDocs plugin to collate json schema files and convert them into markdown files",
     long_description=long_description,
     long_description_content_type="text/markdown",

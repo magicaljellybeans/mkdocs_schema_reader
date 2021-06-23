@@ -12,14 +12,14 @@ Activate the plugin in `mkdocs.yml`:
 ```yaml
 plugins:
   - search
-  - schema-reader
+  - schema_reader
 ```
 
 Then, specify folders and files that you want to include in `mkdocs.yml` relative to it's location, like so:
 ```yaml
 plugins:
   - search
-  - schema-reader:
+  - schema_reader:
       include: 
         - "../JSONSchema/"
         - "../example/directory/schema.json"
