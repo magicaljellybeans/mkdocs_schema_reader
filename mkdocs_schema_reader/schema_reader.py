@@ -10,7 +10,12 @@ from mkdocs.config import config_options
 
 class SchemaReader(BasePlugin):
 
-    config_scheme = (("include", config_options.Type(list, default=[])),)
+    config_scheme = (
+        ("include", config_options.Type(list, default=[])),
+        ("auto_nav", config_options.Type(bool, default=True)),
+        ("output", config_options.Type(str, default="site/schema")),
+        ("nav", config_options.Type(str, default="Schema"))
+    )
 
     def on_files(self, files, config):
         # Add json files within included files/directories to list
@@ -31,7 +36,15 @@ class SchemaReader(BasePlugin):
 
         parser = jsonschema2md.Parser()
         schema_list = []
-        schema_dict = {"Schema": schema_list}
+
+        ## Path to Nav ##
+        path=list(filter(None, self.config["nav"].split('/')))
+        path.reverse()
+        out_as_string = f"{{'{path.pop(0)}': schema_list}}"
+        for item in path:
+            out_as_string = f"{{'{item}':[{out_as_string}]}}"
+
+        schema_dict = eval(f"{out_as_string}")
 
         for filepath in locations:
             file = os.path.basename(filepath)
@@ -43,9 +56,9 @@ class SchemaReader(BasePlugin):
 
                 if any(x in data for x in schema_syntax):
                     # write converted markdown file to this location
-                    path = f"site/schema/{file[:-5]}.md"
-                    if not os.path.isdir("./site/schema"):
-                        os.makedirs("./site/schema", exist_ok=True)
+                    path = f"{self.config['output']}/{file[:-5]}.md"
+                    if not os.path.isdir(f"./{self.config['output']}"):
+                        os.makedirs(f"./{self.config['output']}", exist_ok=True)
 
                     try:
                         with open(path, "w") as md:
@@ -61,8 +74,8 @@ class SchemaReader(BasePlugin):
 
                     # Add to Files object
                     mkdfile = File(
-                        f"schema/{file[:-5]}.md",
-                        f"{os.getcwd()}/site",
+                        f"{file[:-5]}.md",
+                        f"{os.getcwd()}/{self.config['output']}",
                         config["site_dir"],
                         config["use_directory_urls"],
                     )
@@ -77,6 +90,7 @@ class SchemaReader(BasePlugin):
                     )
 
         # Add schemas to nav
-        config["nav"].append(schema_dict)
+        if self.config["auto_nav"]:
+            config["nav"].append(schema_dict)
 
         return files
