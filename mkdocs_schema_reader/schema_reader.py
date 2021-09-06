@@ -13,7 +13,7 @@ class SchemaReader(BasePlugin):
     config_scheme = (
         ("include", config_options.Type(list, default=[])),
         ("auto_nav", config_options.Type(bool, default=True)),
-        ("output", config_options.Type(str, default="site/schema")),
+        ("output", config_options.Type(str, default="schema")),
         ("nav", config_options.Type(str, default="Schema"))
         ("example_as_yaml", config_options.Type(bool, default=False))
         ("show_example", config_options.Type(str, default='all'))
@@ -57,7 +57,6 @@ class SchemaReader(BasePlugin):
                 schema_syntax = ["$schema", "$ref"]
 
                 if any(x in data for x in schema_syntax):
-                    print(config['docs_dir'])
                     path = f"{config['docs_dir']}/{self.config['output']}/{file[:-5]}.md"
                     # write converted markdown file to this location
                     if not os.path.isdir(f"{config['docs_dir']}/{self.config['output']}"):
