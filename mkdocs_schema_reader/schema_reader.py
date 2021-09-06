@@ -14,8 +14,8 @@ class SchemaReader(BasePlugin):
         ("include", config_options.Type(list, default=[])),
         ("auto_nav", config_options.Type(bool, default=True)),
         ("output", config_options.Type(str, default="schema")),
-        ("nav", config_options.Type(str, default="Schema"))
-        ("example_as_yaml", config_options.Type(bool, default=False))
+        ("nav", config_options.Type(str, default="Schema")),
+        ("example_as_yaml", config_options.Type(bool, default=False)),
         ("show_example", config_options.Type(str, default='all'))
     )
 
