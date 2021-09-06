@@ -2,6 +2,8 @@
 
 This is a plugin that scans the specified directories and files for JSON Schema files, converts them to markdown and builds them into your documentation.
 
+**Breaking Change**  This version can introduce some breaking change. Markdown output is now wrtie to documentation directory (`${docs_dir/schema}`)instead of `site/schema`. If your documentation was in `site` folder, this will change nothing. Use the new `output` options for control it if needed.
+
 ## Setup
 
 Install the plugin using pip:
