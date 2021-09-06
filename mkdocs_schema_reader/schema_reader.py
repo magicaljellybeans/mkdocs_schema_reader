@@ -15,6 +15,8 @@ class SchemaReader(BasePlugin):
         ("auto_nav", config_options.Type(bool, default=True)),
         ("output", config_options.Type(str, default="site/schema")),
         ("nav", config_options.Type(str, default="Schema"))
+        ("example_as_yaml", config_options.Type(bool, default=False))
+        ("show_example", config_options.Type(str, default='all'))
     )
 
     def on_files(self, files, config):
@@ -55,14 +57,15 @@ class SchemaReader(BasePlugin):
                 schema_syntax = ["$schema", "$ref"]
 
                 if any(x in data for x in schema_syntax):
+                    print(config['docs_dir'])
+                    path = f"{config['docs_dir']}/{self.config['output']}/{file[:-5]}.md"
                     # write converted markdown file to this location
-                    path = f"{self.config['output']}/{file[:-5]}.md"
-                    if not os.path.isdir(f"./{self.config['output']}"):
-                        os.makedirs(f"./{self.config['output']}", exist_ok=True)
+                    if not os.path.isdir(f"{config['docs_dir']}/{self.config['output']}"):
+                        os.makedirs(f"{config['docs_dir']}/{self.config['output']}", exist_ok=True)
 
                     try:
                         with open(path, "w") as md:
-                            lines = parser.parse_schema(json.loads(data))
+                            lines = parser.parse_schema(json.loads(data), example_as_yaml=self.config["example_as_yaml"], show_example=self.config["show_example"])
                             for line in lines:
                                 md.write(line)
 
@@ -74,8 +77,8 @@ class SchemaReader(BasePlugin):
 
                     # Add to Files object
                     mkdfile = File(
-                        f"{file[:-5]}.md",
-                        f"{os.getcwd()}/{self.config['output']}",
+                        f"{self.config['output']}/{file[:-5]}.md",
+                        config['docs_dir'],
                         config["site_dir"],
                         config["use_directory_urls"],
                     )
