@@ -45,7 +45,6 @@ Just activate the plugin, specify directories and files in the manner shown abov
 - `example_as_yaml` : Show example as yaml instead of json (bool, default=False)
 - `show_example` : Select what example will be show  (str, default='all')
     - `all` : All examples
-    - `any` : No example will be show
     - `object` : Only examples present in objects section
     - `propertie` : Only examples present in properties section
 

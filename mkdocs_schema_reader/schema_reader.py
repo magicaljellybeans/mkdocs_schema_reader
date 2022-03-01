@@ -36,7 +36,10 @@ class SchemaReader(BasePlugin):
             else:
                 logging.warning(f"Could not locate {entry}")
 
-        parser = jsonschema2md.Parser()
+        parser = jsonschema2md.Parser(
+            examples_as_yaml=self.config["example_as_yaml"],
+            show_examples=self.config["show_example"]
+        )
         schema_list = []
 
         ## Path to Nav ##
@@ -64,7 +67,7 @@ class SchemaReader(BasePlugin):
 
                     try:
                         with open(path, "w") as md:
-                            lines = parser.parse_schema(json.loads(data), example_as_yaml=self.config["example_as_yaml"], show_example=self.config["show_example"])
+                            lines = parser.parse_schema(json.loads(data))
                             for line in lines:
                                 md.write(line)
 
