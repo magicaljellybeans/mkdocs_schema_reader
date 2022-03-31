@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="mkdocs_schema_reader",
-    version="0.11.1",
+    version="0.12.1",
     description="A MkDocs plugin to collate json schema files and convert them into markdown files",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -16,7 +16,7 @@ setup(
     author_email="tome.robin@gmail.com",
     license="MIT",
     python_requires=">=3.6",
-    install_requires=["mkdocs>=1.0.4", "jsonschema2md"],
+    install_requires=["mkdocs>=1.0.4", "jsonschema2md>=0.3.0"],
     packages=find_packages(),
     entry_points={
         "mkdocs.plugins": [
